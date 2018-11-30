@@ -19,7 +19,6 @@ import {Hero} from '../hero';
 export class HeroesComponent implements OnInit {
 
   heroes: Hero[];
-  selectedHero: Hero;
 
   /**
    * 1. 声明了一个私有 heroService 属性，
@@ -32,16 +31,36 @@ export class HeroesComponent implements OnInit {
 
   }
 
+  delete(hero: Hero): void {
+    this.heroes = this.heroes.filter(h => h != hero);
+    this.heroService.deleteHero(hero).subscribe();
+  }
+
+  /**
+   *
+   * 当指定的名字非空时，这个处理器会用这个名字创建一个类似于 Hero 的对象（只缺少 id 属性），并把它传给服务的 addHero() 方法。
+   * 当 addHero 保存成功时，subscribe 的回调函数会收到这个新英雄，并把它追加到 heroes 列表中以供显示。
+   * 你将在下一节编写 HeroService.addHero。
+   */
+  add(name: string): void {
+    name = name.trim();
+    if (!name) {
+      return;
+    }
+
+    this.heroService.addHero({name} as Hero)
+      .subscribe(Hero => {
+        this.heroes.push(Hero);
+      });
+
+  }
+
   /**
    * ngOnInit 是一个生命周期钩子，Angular 在创建完组件后很快就会调用 ngOnInit。
    * 这里是放置初始化逻辑的好地方
    */
   ngOnInit() {
     this.getHeroes();
-  }
-
-  onSelect(hero: Hero): void {
-    this.selectedHero = hero;
   }
 
   getHeroes(): void {
