@@ -1,3 +1,7 @@
-<p>
-  upload-files works!
-</p>
+<div>
+  <label for="file">Upload file</label>
+  <input id="file" #file type="file" multiple (change)="upload(file)" />
+  <span *ngIf="uploadProgress > 0 && uploadProgress < 100">
+        {{uploadProgress}}%
+    </span>
+</div>
